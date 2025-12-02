@@ -41,8 +41,7 @@ local function task02(lines)
     return zero_counter
 end
 
-local input_dir = "andurian"
-local input_file = "input/" .. input_dir .. "/day01.txt"
-local lines = util.lines_from(input_file)
+local lines = util.lines_from(arg[1])
+
 print(task01(lines))
 print(task02(lines))
