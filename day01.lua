@@ -43,5 +43,5 @@ end
 
 local lines = util.lines_from(arg[1])
 
-print(task01(lines))
-print(task02(lines))
+util.aocTask(1, 1, task01, lines)
+util.aocTask(1, 2, task02, lines)

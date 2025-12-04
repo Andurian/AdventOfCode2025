@@ -65,16 +65,8 @@ local function sumRanges(ranges, predicate)
     return sum
 end
 
-local function task01(ranges)
-    return sumRanges(ranges, isTwiceRepeatingNumber)
-end
-
-local function task02(ranges)
-    return sumRanges(ranges, isRepeatingNumber)
-end
-
 local input = util.lines_from(arg[1])[1]
 local ranges = rangesFromInput(input)
 
-print("Solution Task 01: " .. task01(ranges))
-print("Solution Task 02: " .. task02(ranges))
+util.aocTask(2, 1, sumRanges, ranges, isTwiceRepeatingNumber)
+util.aocTask(2, 2, sumRanges, ranges, isRepeatingNumber)
