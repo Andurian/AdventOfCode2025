@@ -8,7 +8,7 @@ local function solveDay(n, input_dir)
 end
 
 local input_dir = arg[1]
-local days = util.list_from_range(1, 3)
+local days = util.list_from_range(1, 5)
 
 arg = {} -- used to pass arguments to individual days
 

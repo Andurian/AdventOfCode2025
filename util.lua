@@ -76,5 +76,40 @@ function util.printable_enum(repr)
   )
 end
 
+function util.find_if(list, predicate)
+  for i, value in ipairs(list) do
+    if predicate(value) == true then
+      return i, value
+    end
+  end
+
+  return nil
+end
+
+function util.print_list(list)
+  for _, v in ipairs(list) do
+    print(v)
+  end
+end
+
+function util.transform_list(list, factory)
+  local ret = {}
+  for _, elem in ipairs(list) do
+    ret[#ret+1] = factory(elem)
+  end
+  return ret
+end
+
+function util.copy_list(list)
+  return util.transform_list(list, function(elem) return elem:copy() end)
+end
+
+function util.sum_list(list, f)
+  local ret = 0
+  for _, value in ipairs(list) do
+    ret = ret + f(value)
+  end
+  return ret
+end
 
 return util
