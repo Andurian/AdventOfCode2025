@@ -25,6 +25,14 @@ function util.listFromString(s, separator, factory)
   return ret
 end
 
+function util.list_to_string(list)
+  local ret = ""
+  for _, c in ipairs(list) do
+    ret = ret .. c
+  end
+  return ret
+end
+
 function util.listFromStringByChars(s, factory)
   local ret = {}
   for i = 1, #s do
