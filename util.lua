@@ -25,18 +25,31 @@ function util.listFromString(s, separator, factory)
   return ret
 end
 
-function util.list_to_string(list)
-  local ret = ""
-  for _, c in ipairs(list) do
-    ret = ret .. c
-  end
-  return ret
-end
 
 function util.listFromStringByChars(s, factory)
   local ret = {}
   for i = 1, #s do
-    ret[#ret + 1] = factory(string.sub(s, i, i))
+    if factory ~= nil then
+      ret[#ret + 1] = factory(string.sub(s, i, i))
+    else
+      ret[#ret + 1] = string.sub(s, i, i)
+    end
+  end
+  return ret
+end
+
+function util.list_from_set(s)
+  local ret = {}
+  for i, _ in pairs(s) do
+    ret[#ret+1] = i
+  end
+  return ret
+end
+
+function util.list_from_set_values(s)
+  local ret = {}
+  for i, v in pairs(s) do
+    ret[#ret+1] = v
   end
   return ret
 end
@@ -94,6 +107,18 @@ function util.find_if(list, predicate)
   return nil
 end
 
+function util.find_all(list, predicate)
+  local ret_idx = {}
+  local ret_vals = {}
+  for i, value in ipairs(list) do
+    if predicate(value) == true then
+      ret_idx[#ret_idx + 1] = i
+      ret_vals[#ret_vals + 1] = value
+    end
+  end
+  return ret_idx, ret_vals
+end
+
 function util.print_list(list)
   for _, v in ipairs(list) do
     print(v)
@@ -103,13 +128,33 @@ end
 function util.transform_list(list, factory)
   local ret = {}
   for _, elem in ipairs(list) do
-    ret[#ret+1] = factory(elem)
+    ret[#ret + 1] = factory(elem)
   end
   return ret
 end
 
 function util.copy_list(list)
   return util.transform_list(list, function(elem) return elem:copy() end)
+end
+
+function util.replace_char(str, pos, r)
+  return str:sub(1, pos - 1) .. r .. str:sub(pos + 1)
+end
+
+function util.replace_chars(str, positions, r)
+  local s = str
+  for _, pos in ipairs(positions) do
+    s = util.replace_char(s, pos, r)
+  end
+  return s
+end
+
+function util.replace_chars_individually(str, positions, r)
+  local s = str
+  for i, pos in ipairs(positions) do
+    s = util.replace_char(s, pos, r[i])
+  end
+  return s
 end
 
 function util.sum_list(list, f)
