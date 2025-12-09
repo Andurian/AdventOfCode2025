@@ -1,5 +1,7 @@
 local grid2d = {}
 
+local list = require("list")
+
 local Neighbors = {
     North = {},
     NorthEast = {},
@@ -35,6 +37,10 @@ function Index.new(row, col)
     return setmetatable({ row = row, col = col }, Index)
 end
 
+function Index.from_line(line)
+    return Index.new(table.unpack(list.from_string(line, ",", tonumber)))
+end
+
 function Index:copy()
     return setmetatable({ row = self.row, col = self.col }, Index)
 end
@@ -44,7 +50,7 @@ function Index.__eq(a, b)
 end
 
 function Index.__tostring(i)
-    return string.format("[%d, %d]", i.row, i.col)
+    return string.format("[%.2f, %.2f]", i.row, i.col)
 end
 
 function Index:neighbor(neighbor)
@@ -107,10 +113,10 @@ end
 function Grid:iterator()
     local current = Index.new(0, 0)
     return function()
-        if(not self:contains(current)) then return nil end
+        if (not self:contains(current)) then return nil end
         local idx, ret = current:copy(), self:at(current)
         current.col = current.col + 1
-        if(current.col == self.cols) then
+        if (current.col == self.cols) then
             current.row = current.row + 1
             current.col = 0
         end
@@ -120,9 +126,9 @@ end
 
 function Grid.__tostring(g)
     local ret = ""
-    for row = 0, g.rows-1 do
+    for row = 0, g.rows - 1 do
         local line = ""
-        for col = 0, g.cols-1 do
+        for col = 0, g.cols - 1 do
             line = line .. tostring(g:at(Index.new(row, col)))
         end
         ret = ret .. line .. "\n"
@@ -130,8 +136,64 @@ function Grid.__tostring(g)
     return ret
 end
 
+local SparseGrid = {}
+SparseGrid.__index = SparseGrid
+
+function SparseGrid.from_points(points)
+    local min = points[1]:copy()
+    local max = points[1]:copy()
+    local set = {}
+    for _, point in ipairs(points) do
+        min.row = math.min(min.row, point.row)
+        min.col = math.min(min.col, point.col)
+        max.row = math.max(max.row, point.row)
+        max.col = math.max(max.col, point.col)
+        set[tostring(point)] = true
+    end
+
+    return setmetatable({ min = min, max = max, points = set }, SparseGrid)
+end
+
+function SparseGrid.empty()
+    return setmetatable({points = {}}, SparseGrid)
+end
+
+function SparseGrid:add(point)
+    if self.min == nil then
+        self.min = point:copy()
+        self.max = point:copy()
+    else 
+    self.min.row = math.min(self.min.row, point.row)
+    self.min.col = math.min(self.min.col, point.col)
+    self.max.row = math.max(self.max.row, point.row)
+    self.max.col = math.max(self.max.col, point.col)
+    end
+    self.points[tostring(point)] = true
+end
+
+function SparseGrid:contains(point)
+    return self.points[tostring(point)] == true
+end
+
+function SparseGrid.__tostring(self)
+    local ret = ""
+    for row = self.min.row,self.max.row do
+        for col = self.min.col,self.max.col do
+            local idx = Index.new(row, col)
+            if(self.points[tostring(idx)] == true) then
+                ret = ret .. "#"
+            else
+                ret = ret .. "."
+            end
+        end
+        ret = ret .. "\n"
+    end
+    return ret
+end
+
 grid2d.Neighbors = Neighbors
 grid2d.Index = Index
 grid2d.Grid = Grid
+grid2d.SparseGrid = SparseGrid
 
 return grid2d
