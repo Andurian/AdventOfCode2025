@@ -7,7 +7,6 @@ local function file_exists(file)
   return f ~= nil
 end
 
-
 function util.lines_from(file)
   if not file_exists(file) then return {} end
   local lines = {}
@@ -15,43 +14,6 @@ function util.lines_from(file)
     lines[#lines + 1] = line
   end
   return lines
-end
-
-function util.listFromString(s, separator, factory)
-  local ret = {}
-  for match in string.gmatch(s, "[^" .. separator .. "]+") do
-    ret[#ret + 1] = factory(match)
-  end
-  return ret
-end
-
-
-function util.listFromStringByChars(s, factory)
-  local ret = {}
-  for i = 1, #s do
-    if factory ~= nil then
-      ret[#ret + 1] = factory(string.sub(s, i, i))
-    else
-      ret[#ret + 1] = string.sub(s, i, i)
-    end
-  end
-  return ret
-end
-
-function util.list_from_set(s)
-  local ret = {}
-  for i, _ in pairs(s) do
-    ret[#ret+1] = i
-  end
-  return ret
-end
-
-function util.list_from_set_values(s)
-  local ret = {}
-  for i, v in pairs(s) do
-    ret[#ret+1] = v
-  end
-  return ret
 end
 
 function util.executeTimed(f, ...)
@@ -77,15 +39,6 @@ function util.dump(o)
   end
 end
 
-function util.list_from_range(a, b, step)
-  local ret = {}
-  step = step or 1
-  for i = a, b, step do
-    ret[#ret + 1] = i
-  end
-  return ret
-end
-
 function util.printable_enum(repr)
   return setmetatable(
     { repr = repr },
@@ -95,46 +48,6 @@ function util.printable_enum(repr)
       end
     }
   )
-end
-
-function util.find_if(list, predicate)
-  for i, value in ipairs(list) do
-    if predicate(value) == true then
-      return i, value
-    end
-  end
-
-  return nil
-end
-
-function util.find_all(list, predicate)
-  local ret_idx = {}
-  local ret_vals = {}
-  for i, value in ipairs(list) do
-    if predicate(value) == true then
-      ret_idx[#ret_idx + 1] = i
-      ret_vals[#ret_vals + 1] = value
-    end
-  end
-  return ret_idx, ret_vals
-end
-
-function util.print_list(list)
-  for _, v in ipairs(list) do
-    print(v)
-  end
-end
-
-function util.transform_list(list, factory)
-  local ret = {}
-  for _, elem in ipairs(list) do
-    ret[#ret + 1] = factory(elem)
-  end
-  return ret
-end
-
-function util.copy_list(list)
-  return util.transform_list(list, function(elem) return elem:copy() end)
 end
 
 function util.replace_char(str, pos, r)
@@ -155,14 +68,6 @@ function util.replace_chars_individually(str, positions, r)
     s = util.replace_char(s, pos, r[i])
   end
   return s
-end
-
-function util.sum_list(list, f)
-  local ret = 0
-  for _, value in ipairs(list) do
-    ret = ret + f(value)
-  end
-  return ret
 end
 
 return util

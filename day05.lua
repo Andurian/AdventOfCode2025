@@ -1,13 +1,14 @@
 local util = require("util")
+local list = require("list")
 local range = require("range")
 
 local function preprocess(lines)
-    local split_idx = util.find_if(lines, function(s) return string.len(s) == 0 end)
+    local split_idx = list.find_first(lines, function(s) return string.len(s) == 0 end)
     local range_lines = { table.unpack(lines, 1, split_idx - 1) }
     local id_lines = { table.unpack(lines, split_idx + 1) }
 
-    local valid_ranges = util.transform_list(range_lines, range.Inclusive.fromString)
-    local ids = util.transform_list(id_lines, tonumber)
+    local valid_ranges = list.transform(range_lines, range.Inclusive.from_string)
+    local ids = list.transform(id_lines, tonumber)
     return valid_ranges, ids
 end
 
@@ -48,12 +49,12 @@ local function try_merge(list)
 end
 
 local function task02(valid_ranges)
-    local current = util.copy_list(valid_ranges)
+    local current = list.copy(valid_ranges)
     local continue = true
     while continue do
         current, continue = try_merge(current)
     end
-    return util.sum_list(current, range.Inclusive.count)
+    return list.accumulate(current, 0, function(a, b) return a + range.Inclusive.count(b) end)
 end
 
 local lines = util.lines_from(arg[1])

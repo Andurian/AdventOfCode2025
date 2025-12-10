@@ -1,4 +1,5 @@
 local util = require("util")
+local list = require("list")
 
 local function operation(op)
     if op == "+" then
@@ -29,7 +30,7 @@ local function build_inputs(numbers)
     local inputs = {}
     local current_problem = {}
     for _, line in ipairs(numbers) do
-        local number = tonumber(util.list_to_string(line))
+        local number = tonumber(table.concat(line))
         if number == nil then
             inputs[#inputs + 1] = current_problem
             current_problem = {}
@@ -44,8 +45,8 @@ local function build_inputs(numbers)
 end
 
 local function task01(numbers_strings, ops)
-    local numbers = util.transform_list(numbers_strings, function(line)
-        return util.listFromString(line, " ", tonumber)
+    local numbers = list.transform(numbers_strings, function(line)
+        return list.from_string(line, " ", tonumber)
     end)
 
     local ret = 0
@@ -60,8 +61,8 @@ local function task01(numbers_strings, ops)
 end
 
 local function task02(numbers_strings, ops)
-    local number_matrix = util.transform_list(numbers_strings,
-        function(line) return util.listFromStringByChars(line, function(x) return x end) end)
+    local number_matrix = list.transform(numbers_strings,
+        function(line) return list.from_chars(line, function(x) return x end) end)
     local friendly_number_matrix = rot_left(number_matrix)
     local problem_inputs = build_inputs(friendly_number_matrix)
 
@@ -79,7 +80,7 @@ end
 local input = util.lines_from(arg[1])
 
 local numbers_strings = { table.unpack(input, 1, #input - 1) }
-local ops = util.transform_list(util.listFromString(input[#input], " ", function(x) return x end), operation)
+local ops = list.transform(list.from_string(input[#input], " ", function(x) return x end), operation)
 
 
 util.aocTask(6, 1, task01, numbers_strings, ops)

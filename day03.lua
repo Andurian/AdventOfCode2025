@@ -1,4 +1,5 @@
 local util = require("util")
+local list = require("list")
 
 local function joltage(batteries, n)
     if n <= 0 then return 0 end
@@ -14,7 +15,7 @@ end
 local function totalJoltage(lines, n) 
     local sum = 0
     for _,line in ipairs(lines) do
-        local batteries = util.listFromStringByChars(line, tonumber)
+        local batteries = list.from_chars(line, tonumber)
         sum = sum + joltage(batteries, n)
     end
     return sum

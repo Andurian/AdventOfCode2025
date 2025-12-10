@@ -1,6 +1,6 @@
 local range = {}
 
-local util = require("util")
+local list = require("list")
 
 local Inclusive = {}
 Inclusive.__index = Inclusive
@@ -13,8 +13,8 @@ function Inclusive:copy()
     return setmetatable({min = self.min, max = self.max}, Inclusive)
 end
 
-function Inclusive.fromString(s)
-    local limits = util.listFromString(s, "-", tonumber)
+function Inclusive.from_string(s)
+    local limits = list.from_string(s, "-", tonumber)
     return Inclusive.new(limits[1], limits[2])
 end
 

@@ -1,4 +1,5 @@
 local util = require("util")
+local list = require("list")
 
 local function solveDay(n, input_dir)
     local input_filename = string.format("%s/day%02d.txt", input_dir, n)
@@ -8,7 +9,7 @@ local function solveDay(n, input_dir)
 end
 
 local input_dir = arg[1]
-local days = util.list_from_range(1, 9)
+local days = list.from_range(1, 9)
 
 arg = {} -- used to pass arguments to individual days
 

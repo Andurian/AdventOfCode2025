@@ -1,4 +1,5 @@
 local util = require("util")
+local list = require("list")
 
 InclusiveRange = {}
 
@@ -7,8 +8,8 @@ function InclusiveRange.new(min, max)
     return range
 end
 
-function InclusiveRange.fromString(s)
-    local limits = util.listFromString(s, "-", tonumber)
+function InclusiveRange.from_string(s)
+    local limits = list.from_string(s, "-", tonumber)
     return InclusiveRange.new(limits[1], limits[2])
 end
 
@@ -23,7 +24,7 @@ function InclusiveRange.iterator(range)
 end
 
 local function rangesFromInput(input)
-    return util.listFromString(input, ",", InclusiveRange.fromString)
+    return list.from_string(input, ",", InclusiveRange.from_string)
 end
 
 local function isTwiceRepeatingNumber(n)
