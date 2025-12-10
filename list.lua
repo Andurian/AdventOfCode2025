@@ -7,8 +7,12 @@ local list = {}
 ---@return table
 function list.from_string(str, separator, factory)
     local ret = {}
+    local f = factory
+    if f == nil then
+        f = function(s) return s end
+    end
     for match in string.gmatch(str, "[^" .. separator .. "]+") do
-        ret[#ret + 1] = factory(match)
+        ret[#ret + 1] = f(match)
     end
     return ret
 end
