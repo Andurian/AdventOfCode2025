@@ -70,4 +70,43 @@ function util.replace_chars_individually(str, positions, r)
   return s
 end
 
+function util.table_equal(t1, t2)
+    if t1 == t2 then return true end
+    if type(t1) ~= "table" or type(t2) ~= "table" then
+        return false
+    end
+
+    -- compare keys/values in t1 against t2
+    for k, v in pairs(t1) do
+        if not util.table_equal(v, t2[k]) then
+            return false
+        end
+    end
+
+    -- ensure t2 doesn't have extra keys
+    for k in pairs(t2) do
+        if t1[k] == nil then
+            return false
+        end
+    end
+
+    return true
+end
+
+-- from http://lua-users.org/wiki/CopyTable
+function util.deepcopy(orig)
+    local orig_type = type(orig)
+    local copy
+    if orig_type == 'table' then
+        copy = {}
+        for orig_key, orig_value in next, orig, nil do
+            copy[util.deepcopy(orig_key)] = util.deepcopy(orig_value)
+        end
+        setmetatable(copy, util.deepcopy(getmetatable(orig)))
+    else -- number, string, boolean, etc
+        copy = orig
+    end
+    return copy
+end
+
 return util
