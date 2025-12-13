@@ -126,6 +126,20 @@ function list.transform(arr, factory)
   return ret
 end
 
+function list.reverse(tab)
+    for i = 1, #tab//2, 1 do
+        tab[i], tab[#tab-i+1] = tab[#tab-i+1], tab[i]
+    end
+    return tab
+end
+
+function list.concat(l1, l2)
+    for _, elem in ipairs(l2) do
+        l1[#l1+1] = elem
+    end
+    return l1
+end
+
 function list.copy(arr)
   return list.transform(arr, function(elem) return elem:copy() end)
 end
