@@ -69,6 +69,14 @@ function list.from_range(a, b, step)
     return ret
 end
 
+function list.from_const(num, val)
+    local ret = {}
+    for _ = 1, num, 1 do
+        ret[#ret + 1] = val
+    end
+    return ret
+end
+
 local function create_matcher(predicate)
      if type(predicate) == "function" then
         return predicate

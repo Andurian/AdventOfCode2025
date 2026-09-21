@@ -124,6 +124,16 @@ function Grid:iterator()
     end
 end
 
+function Grid:count(entry)
+    local sum = 0
+    for _, tile in self:iterator() do
+        if (tile == entry) then
+            sum = sum + 1
+        end
+    end
+    return sum
+end
+
 function Grid.__tostring(g)
     local ret = ""
     for row = 0, g.rows - 1 do
